@@ -4,63 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Treino</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>Meu Treino</h1>
+        <h1>MEU TREINO</h1>
     </header>
     <main id="main-content">
-        <div id="login-container">
-            <h2>Login</h2>
-            <input type="text" id="login-username" placeholder="Usuário">
-            <input type="password" id="login-password" placeholder="Senha">
-            <button onclick="login()">Entrar</button>
-            <p>Não tem conta? <a href="#" onclick="showRegister()">Criar Conta</a></p>
-        </div>
-        <div id="register-container" style="display:none;">
-            <h2>Criar Conta</h2>
-            <input type="text" id="register-username" placeholder="Usuário">
-            <input type="password" id="register-password" placeholder="Senha">
-            <button onclick="register()">Registrar</button>
-            <p>Já tem conta? <a href="#" onclick="showLogin()">Voltar ao Login</a></p>
-        </div>
-        <div id="week-container" style="display:none;">
-            <h2>Escolha o Dia da Semana</h2>
-            <div id="days"></div>
-            <button id="logout-btn" onclick="logout()">Sair</button>
-        </div>
-        <div id="day-exercises" style="display:none;">
-            <h2 id="day-title"></h2>
-            <div id="exercises-list"></div>
-            <button id="add-exercise-btn" onclick="showAddExerciseForm()">Adicionar Exercício</button>
-            <div id="add-exercise-form" style="display:none;">
-                <select id="day-select">
-                    <option value="segunda">Segunda-feira</option>
-                    <option value="terca">Terça-feira</option>
-                    <option value="quarta">Quarta-feira</option>
-                    <option value="quinta">Quinta-feira</option>
-                    <option value="sexta">Sexta-feira</option>
-                    <option value="sabado">Sábado</option>
-                </select>
-                <select id="muscle-group-select">
-                    <option value="Peito">Peito</option>
-                    <option value="Costas">Costas</option>
-                    <option value="Pernas">Pernas</option>
-                    <option value="Ombros">Ombros</option>
-                    <option value="Bíceps">Bíceps</option>
-                    <option value="Tríceps">Tríceps</option>
-                    <option value="Abdômen">Abdômen</option>
-                    <option value="Panturrilha">Panturrilha</option>
-                    <option value="Antebraço">Antebraço</option>
-                </select>
-                <input type="text" id="exercise-name" placeholder="Nome do Exercício">
-                <input type="number" id="exercise-series" placeholder="Número de Séries">
-                <input type="text" id="exercise-video" placeholder="Link do YouTube">
-                <button onclick="addExercise()">Salvar Exercício</button>
-            </div>
-            <button onclick="backToDays()">Voltar aos Dias</button>
-        </div>
+        <div id="dias-da-semana" class="dias-container"></div>
     </main>
     <script src="script.js"></script>
 </body>
