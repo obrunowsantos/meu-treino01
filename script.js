@@ -1,4 +1,4 @@
-// script.js corrigido
+// script.js atualizado e corrigido
 
 // Função para adicionar um exercício
 function addExercise() {
@@ -19,7 +19,7 @@ function addExercise() {
     }
 }
 
-// Função para exibir os exercícios
+// Função para exibir exercícios
 function displayExercises() {
     const container = document.getElementById('exercises');
     container.innerHTML = '';
@@ -40,7 +40,7 @@ function displayExercises() {
         groupTitle.textContent = group;
         groupDiv.appendChild(groupTitle);
 
-        groups[group].forEach((exercise, index) => {
+        groups[group].forEach(exercise => {
             const exerciseDiv = document.createElement('div');
             exerciseDiv.className = 'exercise';
 
@@ -69,7 +69,8 @@ function displayExercises() {
     }
 }
 
-// Função para limpar o formuláriounction clearForm() {
+// Função para limpar o formulário
+function clearForm() {
     document.getElementById('exercise-name').value = '';
     document.getElementById('exercise-series').value = '';
     document.getElementById('exercise-video').value = '';
@@ -93,6 +94,8 @@ function clearAllExercises() {
 }
 
 // Eventos
-window.onload = displayExercises;
-document.getElementById('add-exercise').onclick = addExercise;
-document.getElementById('clear-exercises').onclick = clearAllExercises;
+window.onload = () => {
+    displayExercises();
+    document.getElementById('add-exercise').onclick = addExercise;
+    document.getElementById('clear-exercises').onclick = clearAllExercises;
+};
