@@ -4,46 +4,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Treino - Dias da Semana</title>
+    <title>Meu Treino</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="login-screen">
-        <h1>Entrar</h1>
-        <input type="text" id="username" placeholder="Digite seu nome">
-        <button id="login-button">Entrar</button>
+<header>Meu Treino</header>
+
+<div id="login-screen">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Digite seu nome...">
+    <button id="login-button">Entrar</button>
+</div>
+
+<div id="app" style="display:none;">
+    <h2 id="user-title"></h2>
+    <div id="days-container"></div>
+
+    <div id="day-exercises" style="display:none;">
+        <h2 id="day-title"></h2>
+        <input type="text" id="exercise-name" placeholder="Nome do Exercício">
+        <input type="text" id="exercise-series" placeholder="Séries (Ex: 3x12)">
+        <input type="text" id="exercise-video" placeholder="Link do vídeo (YouTube)">
+        <input type="text" id="exercise-group" placeholder="Grupo Muscular (Ex: Peito)">
+        <button id="add-exercise">Adicionar Exercício</button>
+        <button id="clear-exercises">Limpar Todos os Exercícios</button>
+        <button id="back-button">Voltar</button>
+        <div id="exercises"></div>
     </div>
+</div>
 
-    <div id="app" style="display: none;">
-        <h1 id="user-title"></h1>
-        <button id="clear-exercises" class="clear-btn">Limpar Todos os Exercícios</button>
-        <div id="days-container"></div>
-
-        <div id="day-exercises" style="display:none;">
-            <button id="back-button">⬅ Voltar</button>
-            <h2 id="day-title"></h2>
-            <div id="exercises"></div>
-
-            <h3>Adicionar Exercício</h3>
-            <input type="text" id="exercise-name" placeholder="Nome do Exercício">
-            <input type="text" id="exercise-series" placeholder="Séries (ex: 3x12)">
-            <input type="text" id="exercise-video" placeholder="Link do YouTube">
-            <select id="exercise-group">
-                <option value="">Selecione o Grupo Muscular</option>
-                <option>Peito</option>
-                <option>Costas</option>
-                <option>Pernas</option>
-                <option>Braços</option>
-                <option>Ombros</option>
-                <option>Abdômen</option>
-                <option>Outro</option>
-            </select>
-            <button id="add-exercise">Adicionar Exercício</button>
-        </div>
-
-        <audio id="beep-sound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_b8960e8e68.mp3"></audio>
-    </div>
-
-    <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

@@ -1,156 +1,124 @@
 
-let currentUser = '';
-let currentDay = '';
+// JavaScript adaptado para novo estilo de treino
+const usersData = {};
 
-document.getElementById('login-button').onclick = () => {
+document.getElementById('login-button').addEventListener('click', () => {
     const username = document.getElementById('username').value.trim();
     if (username) {
-        currentUser = username;
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('app').style.display = 'block';
-        document.getElementById('user-title').textContent = `Treino de: ${currentUser}`;
-        displayDays();
-    } else {
-        alert('Por favor, insira um nome de usuário.');
+        localStorage.setItem('currentUser', username);
+        if (!localStorage.getItem(username)) {
+            localStorage.setItem(username, JSON.stringify({}));
+        }
+        showApp();
     }
-};
+});
 
-const weekDays = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
+function showApp() {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('user-title').innerText = "Bem-vindo, " + localStorage.getItem('currentUser');
+    loadDays();
+}
 
-function displayDays() {
-    document.getElementById('day-exercises').style.display = 'none';
-    document.getElementById('days-container').style.display = 'grid';
+function loadDays() {
+    const days = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"];
     const container = document.getElementById('days-container');
     container.innerHTML = '';
 
-    const exercises = JSON.parse(localStorage.getItem(currentUser)) || [];
-    const dayGroups = {};
-
-    weekDays.forEach(day => {
-        const dayExercises = exercises.filter(ex => ex.day === day);
-        let group = dayExercises.length > 0 ? dayExercises[0].group : 'Nenhum';
-
+    days.forEach(day => {
         const card = document.createElement('div');
         card.className = 'day-card';
-        card.innerHTML = `<h3>${day}</h3><p><strong>Grupo:</strong> ${group}</p>`;
+        card.innerText = day;
         card.onclick = () => openDay(day);
         container.appendChild(card);
     });
 }
 
 function openDay(day) {
-    currentDay = day;
-    document.getElementById('day-exercises').style.display = 'block';
     document.getElementById('days-container').style.display = 'none';
-    document.getElementById('day-title').textContent = day;
-    displayExercises();
+    document.getElementById('day-exercises').style.display = 'block';
+    document.getElementById('day-title').innerText = day;
+    loadExercises(day);
 }
 
-function displayExercises() {
+function loadExercises(day) {
+    const user = localStorage.getItem('currentUser');
+    const userData = JSON.parse(localStorage.getItem(user)) || {};
+    const exercises = userData[day] || [];
+
     const container = document.getElementById('exercises');
     container.innerHTML = '';
-    const exercises = JSON.parse(localStorage.getItem(currentUser)) || [];
-    const filtered = exercises.filter(ex => ex.day === currentDay);
 
-    filtered.forEach(exercise => {
-        const div = document.createElement('div');
-        div.className = 'exercise';
-        div.innerHTML = `
-            <p><strong>Nome:</strong> ${exercise.name}</p>
-            <p><strong>Séries:</strong> ${exercise.series}</p>
-            <div>${exercise.video}</div>
-            <button onclick="deleteExercise('${exercise.name}')">Excluir</button>
-            <button onclick="startTimer(this)">Iniciar Descanso (90s)</button>
-        `;
-        container.appendChild(div);
+    exercises.forEach((ex, idx) => {
+        const exDiv = document.createElement('div');
+        exDiv.className = 'exercise';
+        exDiv.innerHTML = `<strong>${ex.name}</strong> - ${ex.series} (${ex.group})<br>
+        <a href="${ex.video}" target="_blank" class="youtube-video">Assistir</a>
+        <br><button onclick="startRestTimer(${idx}, '${day}')">Descanso</button>`;
+        container.appendChild(exDiv);
     });
 }
 
-function addExercise() {
-    const name = document.getElementById('exercise-name').value;
-    const series = document.getElementById('exercise-series').value;
-    const videoLink = document.getElementById('exercise-video').value;
-    const group = document.getElementById('exercise-group').value;
-
-    if (name && series && videoLink && group) {
-        const videoId = extractYouTubeId(videoLink);
-        if (!videoId) {
-            alert('Link do YouTube inválido!');
-            return;
-        }
-        const iframe = `<iframe width="315" height="177" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
-        const exercise = { name, series, video: iframe, group, day: currentDay };
-        let exercises = JSON.parse(localStorage.getItem(currentUser)) || [];
-        exercises.push(exercise);
-        localStorage.setItem(currentUser, JSON.stringify(exercises));
-        clearForm();
-        document.getElementById('day-exercises').style.display = 'none';
-        document.getElementById('days-container').style.display = 'grid';
-        displayDays();
-    } else {
-        alert('Preencha todos os campos.');
-    }
-}
-
-function extractYouTubeId(url) {
-    let videoId = null;
-    if (url.includes('shorts/')) {
-        const parts = url.split('shorts/');
-        videoId = parts[1]?.split('?')[0];
-    } else {
-        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/;
-        const match = url.match(regExp);
-        if (match && match[2].length == 11) {
-            videoId = match[2];
-        }
-    }
-    return videoId;
-}
-
-function deleteExercise(name) {
-    let exercises = JSON.parse(localStorage.getItem(currentUser)) || [];
-    exercises = exercises.filter(exercise => !(exercise.name === name && exercise.day === currentDay));
-    localStorage.setItem(currentUser, JSON.stringify(exercises));
-    displayExercises();
-}
-
-function startTimer(button) {
-    let timerDiv = document.createElement('div');
-    timerDiv.className = 'timer';
-    button.parentNode.appendChild(timerDiv);
-
+function startRestTimer(idx, day) {
+    const timer = document.createElement('div');
+    timer.className = 'timer';
     let seconds = 90;
-    timerDiv.textContent = `Descanso: ${seconds}s`;
+    timer.innerText = `Descanso: 90 segundos`;
+    document.querySelectorAll('.exercise')[idx].appendChild(timer);
+
     const interval = setInterval(() => {
         seconds--;
-        if (seconds > 0) {
-            timerDiv.textContent = `Descanso: ${seconds}s`;
-        } else {
+        timer.innerText = `Descanso: ${seconds} segundos`;
+        if (seconds <= 0) {
             clearInterval(interval);
-            timerDiv.textContent = 'Descanso finalizado!';
-            document.getElementById('beep-sound').play();
+            timer.innerText = "Descanso finalizado!";
+            alert("Descanso finalizado!");
         }
     }, 1000);
 }
 
-function clearForm() {
-    document.getElementById('exercise-name').value = '';
-    document.getElementById('exercise-series').value = '';
-    document.getElementById('exercise-video').value = '';
-    document.getElementById('exercise-group').value = '';
-}
+document.getElementById('add-exercise').addEventListener('click', () => {
+    const name = document.getElementById('exercise-name').value.trim();
+    const series = document.getElementById('exercise-series').value.trim();
+    const video = document.getElementById('exercise-video').value.trim();
+    const group = document.getElementById('exercise-group').value.trim();
+    const day = document.getElementById('day-title').innerText;
 
-function clearAllExercises() {
-    if (confirm('Tem certeza que deseja excluir todos os exercícios?')) {
-        localStorage.removeItem(currentUser);
-        displayDays();
+    if (name && series && video) {
+        const user = localStorage.getItem('currentUser');
+        const userData = JSON.parse(localStorage.getItem(user)) || {};
+        if (!userData[day]) {
+            userData[day] = [];
+        }
+        userData[day].push({ name, series, video, group });
+        localStorage.setItem(user, JSON.stringify(userData));
+        document.getElementById('exercise-name').value = '';
+        document.getElementById('exercise-series').value = '';
+        document.getElementById('exercise-video').value = '';
+        document.getElementById('exercise-group').value = '';
+        backToDays();
     }
+});
+
+document.getElementById('clear-exercises').addEventListener('click', () => {
+    const day = document.getElementById('day-title').innerText;
+    const user = localStorage.getItem('currentUser');
+    const userData = JSON.parse(localStorage.getItem(user)) || {};
+    userData[day] = [];
+    localStorage.setItem(user, JSON.stringify(userData));
+    loadExercises(day);
+});
+
+document.getElementById('back-button').addEventListener('click', backToDays);
+
+function backToDays() {
+    document.getElementById('days-container').style.display = 'grid';
+    document.getElementById('day-exercises').style.display = 'none';
+    loadDays();
 }
 
-document.getElementById('add-exercise').onclick = addExercise;
-document.getElementById('clear-exercises').onclick = clearAllExercises;
-document.getElementById('back-button').onclick = () => {
-    document.getElementById('day-exercises').style.display = 'none';
-    document.getElementById('days-container').style.display = 'grid';
-    displayDays();
+window.onload = () => {
+    if (localStorage.getItem('currentUser')) {
+        showApp();
+    }
 };
