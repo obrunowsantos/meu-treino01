@@ -1,61 +1,66 @@
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 20px;
-  background: #f0f0f0;
-}
 
-h1 {
-  text-align: center;
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
 }
 
 #login-screen, #app {
-  max-width: 700px;
-  margin: 30px auto;
-  padding: 20px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    max-width: 600px;
+    margin: auto;
 }
 
 input, select, button {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
 }
 
-button {
-  background: #28a745;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
+#days-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 20px;
 }
 
-button:hover {
-  background: #218838;
+.day-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
 }
 
-.exercise {
-  background: #e9ecef;
-  padding: 10px;
-  margin-top: 10px;
-  border-radius: 5px;
+.day-card:hover {
+    transform: scale(1.05);
 }
 
-.exercise button {
-  background: #dc3545;
-  margin-top: 5px;
+.clear-btn {
+    background: #ff4d4d;
+    color: white;
+    margin-bottom: 20px;
 }
 
-.exercise button:hover {
-  background: #c82333;
+#exercises .exercise {
+    background: #fff;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .timer {
-  font-size: 1.2em;
-  font-weight: bold;
-  color: #dc3545;
-  margin-top: 5px;
+    margin-top: 10px;
+    color: green;
+    font-weight: bold;
+}
+
+#back-button {
+    background: #007bff;
+    color: white;
+    margin-bottom: 20px;
 }
