@@ -1,82 +1,98 @@
-const form = document.getElementById('exercise-form');
-const list = document.getElementById('exercise-list');
+// script.js corrigido
 
-// Carrega os exercícios do LocalStorage ao iniciar
-let exercises = JSON.parse(localStorage.getItem('exercises')) || [];
+// Função para adicionar um exercício
+function addExercise() {
+    const name = document.getElementById('exercise-name').value;
+    const series = document.getElementById('exercise-series').value;
+    const video = document.getElementById('exercise-video').value;
+    const group = document.getElementById('exercise-group').value;
 
-// Atualiza a lista inicial
-updateList();
-
-// Ao enviar o formulário
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-
-  const name = document.getElementById('exercise-name').value;
-  const series = document.getElementById('exercise-series').value;
-  const video = document.getElementById('exercise-video').value;
-  const group = document.getElementById('exercise-group').value;
-
-  const exercise = { name, series, video, group };
-  exercises.push(exercise);
-  saveExercises();
-  updateList();
-  form.reset();
-});
-
-// Atualiza a exibição dos exercícios
-function updateList() {
-  list.innerHTML = '';
-
-  // Organiza exercícios por grupo muscular
-  const groups = {};
-
-  exercises.forEach(ex => {
-    if (!groups[ex.group]) {
-      groups[ex.group] = [];
+    if (name && series && video && group) {
+        const exercise = { name, series, video, group };
+        let exercises = JSON.parse(localStorage.getItem('exercises')) || [];
+        exercises.push(exercise);
+        localStorage.setItem('exercises', JSON.stringify(exercises));
+        displayExercises();
+        clearForm();
+    } else {
+        alert('Por favor, preencha todos os campos.');
     }
-    groups[ex.group].push(ex);
-  });
+}
 
-  // Para cada grupo, cria um título e lista os exercícios
-  for (const group in groups) {
-    const groupTitle = document.createElement('h2');
-    groupTitle.textContent = group;
-    list.appendChild(groupTitle);
+// Função para exibir os exercícios
+function displayExercises() {
+    const container = document.getElementById('exercises');
+    container.innerHTML = '';
 
-    groups[group].forEach((ex, index) => {
-      const card = document.createElement('div');
-      card.className = 'exercise-card';
-      card.innerHTML = `
-        <h3>${ex.name}</h3>
-        <p><strong>Séries:</strong> ${ex.series}</p>
-        <iframe src="${ex.video}" frameborder="0" allowfullscreen></iframe>
-        <br><br>
-        <button onclick="deleteExercise(${exercises.indexOf(ex)})">Excluir</button>
-      `;
-      list.appendChild(card);
+    const exercises = JSON.parse(localStorage.getItem('exercises')) || [];
+
+    const groups = {};
+    exercises.forEach(exercise => {
+        if (!groups[exercise.group]) {
+            groups[exercise.group] = [];
+        }
+        groups[exercise.group].push(exercise);
     });
-  }
+
+    for (const group in groups) {
+        const groupDiv = document.createElement('div');
+        const groupTitle = document.createElement('h2');
+        groupTitle.textContent = group;
+        groupDiv.appendChild(groupTitle);
+
+        groups[group].forEach((exercise, index) => {
+            const exerciseDiv = document.createElement('div');
+            exerciseDiv.className = 'exercise';
+
+            const namePara = document.createElement('p');
+            namePara.innerHTML = `<strong>Nome:</strong> ${exercise.name}`;
+
+            const seriesPara = document.createElement('p');
+            seriesPara.innerHTML = `<strong>Séries:</strong> ${exercise.series}`;
+
+            const iframeContainer = document.createElement('div');
+            iframeContainer.innerHTML = exercise.video;
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Excluir';
+            deleteButton.onclick = () => deleteExercise(exercise.name);
+
+            exerciseDiv.appendChild(namePara);
+            exerciseDiv.appendChild(seriesPara);
+            exerciseDiv.appendChild(iframeContainer);
+            exerciseDiv.appendChild(deleteButton);
+
+            groupDiv.appendChild(exerciseDiv);
+        });
+
+        container.appendChild(groupDiv);
+    }
 }
 
-// Exclui um exercício
-function deleteExercise(index) {
-  exercises.splice(index, 1);
-  saveExercises();
-  updateList();
+// Função para limpar o formuláriounction clearForm() {
+    document.getElementById('exercise-name').value = '';
+    document.getElementById('exercise-series').value = '';
+    document.getElementById('exercise-video').value = '';
+    document.getElementById('exercise-group').value = '';
 }
 
-// Salva os exercícios no LocalStorage
-function saveExercises() {
-  localStorage.setItem('exercises', JSON.stringify(exercises));
+// Função para excluir um exercício
+function deleteExercise(name) {
+    let exercises = JSON.parse(localStorage.getItem('exercises')) || [];
+    exercises = exercises.filter(exercise => exercise.name !== name);
+    localStorage.setItem('exercises', JSON.stringify(exercises));
+    displayExercises();
 }
 
-// Botão para limpar todos os exercícios
-const clearButton = document.getElementById('clear-all');
+// Função para limpar todos os exercícios
+function clearAllExercises() {
+    if (confirm('Tem certeza que deseja excluir todos os exercícios?')) {
+        localStorage.removeItem('exercises');
+        displayExercises();
+    }
+}
 
-clearButton.addEventListener('click', () => {
-  if (confirm('Tem certeza que deseja apagar TODOS os exercícios?')) {
-    exercises = [];
-    saveExercises();
-    updateList();
-  }
-});
+// Eventos
+window.onload = displayExercises;
+document.getElementById('add-exercise').onclick = addExercise;
+document.getElementById('clear-exercises').onclick = clearAllExercises;
