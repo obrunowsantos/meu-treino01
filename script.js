@@ -19,6 +19,7 @@ const weekDays = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "
 
 function displayDays() {
     document.getElementById('day-exercises').style.display = 'none';
+    document.getElementById('days-container').style.display = 'grid';
     const container = document.getElementById('days-container');
     container.innerHTML = '';
 
@@ -82,8 +83,10 @@ function addExercise() {
         let exercises = JSON.parse(localStorage.getItem(currentUser)) || [];
         exercises.push(exercise);
         localStorage.setItem(currentUser, JSON.stringify(exercises));
-        displayDays();
         clearForm();
+        document.getElementById('day-exercises').style.display = 'none';
+        document.getElementById('days-container').style.display = 'grid';
+        displayDays();
     } else {
         alert('Preencha todos os campos.');
     }
@@ -147,6 +150,7 @@ function clearAllExercises() {
 document.getElementById('add-exercise').onclick = addExercise;
 document.getElementById('clear-exercises').onclick = clearAllExercises;
 document.getElementById('back-button').onclick = () => {
+    document.getElementById('day-exercises').style.display = 'none';
     document.getElementById('days-container').style.display = 'grid';
     displayDays();
 };
