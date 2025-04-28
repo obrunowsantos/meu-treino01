@@ -1,7 +1,5 @@
 
-// JavaScript adaptado para novo estilo de treino
-const usersData = {};
-
+// JavaScript corrigido para garantir o salvamento correto
 document.getElementById('login-button').addEventListener('click', () => {
     const username = document.getElementById('username').value.trim();
     if (username) {
@@ -96,7 +94,7 @@ document.getElementById('add-exercise').addEventListener('click', () => {
         document.getElementById('exercise-series').value = '';
         document.getElementById('exercise-video').value = '';
         document.getElementById('exercise-group').value = '';
-        backToDays();
+        loadExercises(day); // <- carregar de novo o dia sem sumir dados
     }
 });
 
