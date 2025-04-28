@@ -16,12 +16,14 @@ document.getElementById('login-button').onclick = () => {
 function addExercise() {
   const name = document.getElementById('exercise-name').value;
   const series = document.getElementById('exercise-series').value;
-  const video = document.getElementById('exercise-video').value;
+  const videoLink = document.getElementById('exercise-video').value;
   const group = document.getElementById('exercise-group').value;
   const day = document.getElementById('exercise-day').value;
 
-  if (name && series && video && group && day) {
-    const exercise = { name, series, video, group, day };
+  if (name && series && videoLink && group && day) {
+    const videoId = extractYouTubeId(videoLink);
+    const iframe = `<iframe width="315" height="177" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+    const exercise = { name, series, video: iframe, group, day };
     let exercises = JSON.parse(localStorage.getItem(currentUser)) || [];
     exercises.push(exercise);
     localStorage.setItem(currentUser, JSON.stringify(exercises));
@@ -30,6 +32,12 @@ function addExercise() {
   } else {
     alert('Por favor, preencha todos os campos.');
   }
+}
+
+function extractYouTubeId(url) {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length == 11) ? match[2] : null;
 }
 
 function displayExercises() {
