@@ -5,35 +5,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Treino</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<header>Meu Treino</header>
+    <header>
+        <h1>Meu Treino</h1>
+    </header>
+    <main>
+        <section id="dias-semana"></section>
+        <button id="adicionar-exercicio">Adicionar Exercício</button>
+        <button id="limpar-todos">Limpar Todos os Exercícios</button>
+    </main>
 
-<div id="login-screen">
-    <h2>Login</h2>
-    <input type="text" id="username" placeholder="Digite seu nome...">
-    <button id="login-button">Entrar</button>
-</div>
-
-<div id="app" style="display:none;">
-    <h2 id="user-title"></h2>
-    <div id="days-container"></div>
-
-    <div id="day-exercises" style="display:none;">
-        <h2 id="day-title"></h2>
-        <input type="text" id="exercise-name" placeholder="Nome do Exercício">
-        <input type="text" id="exercise-series" placeholder="Séries (Ex: 3x12)">
-        <input type="text" id="exercise-video" placeholder="Link do vídeo (YouTube)">
-        <input type="text" id="exercise-group" placeholder="Grupo Muscular (Ex: Peito)">
-        <button id="add-exercise">Adicionar Exercício</button>
-        <button id="clear-exercises">Limpar Todos os Exercícios</button>
-        <button id="back-button">Voltar</button>
-        <div id="exercises"></div>
+    <div id="modal" class="hidden">
+        <form id="form-exercicio">
+            <label>Dia da Semana:<br><input type="text" id="dia"></label><br>
+            <label>Grupo Muscular:<br><input type="text" id="grupo"></label><br>
+            <label>Nome do Exercício:<br><input type="text" id="nome"></label><br>
+            <label>Número de Séries:<br><input type="text" id="series"></label><br>
+            <label>Link do Youtube:<br><input type="text" id="link"></label><br>
+            <button type="submit">Salvar</button>
+            <button type="button" id="cancelar">Cancelar</button>
+        </form>
     </div>
-</div>
 
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
