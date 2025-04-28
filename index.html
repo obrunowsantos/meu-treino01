@@ -1,32 +1,68 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Treino</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
         <h1>Meu Treino</h1>
     </header>
-    <main>
-        <section id="dias-semana"></section>
-        <button id="adicionar-exercicio">Adicionar Exercício</button>
-        <button id="limpar-todos">Limpar Todos os Exercícios</button>
-    </main>
 
-    <div id="modal" class="hidden">
-        <form id="form-exercicio">
-            <label>Dia da Semana:<br><input type="text" id="dia"></label><br>
-            <label>Grupo Muscular:<br><input type="text" id="grupo"></label><br>
-            <label>Nome do Exercício:<br><input type="text" id="nome"></label><br>
-            <label>Número de Séries:<br><input type="text" id="series"></label><br>
-            <label>Link do Youtube:<br><input type="text" id="link"></label><br>
-            <button type="submit">Salvar</button>
-            <button type="button" id="cancelar">Cancelar</button>
-        </form>
+    <div id="login-section" class="container">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Usuário">
+        <input type="password" id="password" placeholder="Senha">
+        <button onclick="login()">Entrar</button>
+    </div>
+
+    <div id="week-section" class="container hidden">
+        <h2>Escolha o Dia do Treino</h2>
+        <div class="days-grid" id="days-grid">
+            <!-- Cartões dos dias serão criados aqui via JavaScript -->
+        </div>
+    </div>
+
+    <div id="day-exercises-section" class="container hidden">
+        <button class="back-button" onclick="goBack()">← Voltar</button>
+        <h2 id="day-title"></h2>
+        <div id="exercises-list">
+            <!-- Exercícios do dia aparecem aqui -->
+        </div>
+        <button class="add-exercise-button" onclick="showAddExerciseForm()">Adicionar Exercício</button>
+
+        <div id="exercise-form" class="hidden">
+            <h3 id="form-title">Novo Exercício</h3>
+            <select id="day-select">
+                <option value="">Escolha o Dia</option>
+                <option>Segunda</option>
+                <option>Terça</option>
+                <option>Quarta</option>
+                <option>Quinta</option>
+                <option>Sexta</option>
+                <option>Sábado</option>
+            </select>
+
+            <select id="group-select">
+                <option value="">Escolha o Grupo Muscular</option>
+                <option>Peito</option>
+                <option>Costas</option>
+                <option>Pernas</option>
+                <option>Bíceps</option>
+                <option>Tríceps</option>
+                <option>Ombro</option>
+                <option>Abdominal</option>
+            </select>
+
+            <input type="text" id="exercise-name" placeholder="Nome do Exercício">
+            <input type="number" id="exercise-series" placeholder="Número de Séries">
+            <input type="text" id="exercise-video" placeholder="Link do YouTube">
+            <button onclick="saveExercise()">Salvar</button>
+        </div>
+
+        <button class="clear-button" onclick="clearExercises()">Limpar Todos os Exercícios</button>
     </div>
 
     <script src="script.js"></script>

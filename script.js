@@ -1,84 +1,178 @@
+let currentUser = null;
+let currentDay = null;
+let editingExerciseIndex = null;
 
-const diasSemana = document.getElementById('dias-semana');
-const modal = document.getElementById('modal');
-const form = document.getElementById('form-exercicio');
-const btnAdicionar = document.getElementById('adicionar-exercicio');
-const btnCancelar = document.getElementById('cancelar');
-const btnLimpar = document.getElementById('limpar-todos');
+// Dados de login (simples)
+const users = [
+    { username: "admin", password: "1234" },
+    { username: "user", password: "abcd" }
+];
 
-let treinos = JSON.parse(localStorage.getItem('treinos')) || {};
+// Fazer login
+function login() {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
 
-function salvarTreinos() {
-    localStorage.setItem('treinos', JSON.stringify(treinos));
+    const user = users.find(u => u.username === username && u.password === password);
+    if (user) {
+        currentUser = username;
+        document.getElementById('login-section').classList.add('hidden');
+        document.getElementById('week-section').classList.remove('hidden');
+        renderDays();
+    } else {
+        alert('Usuário ou senha incorretos.');
+    }
 }
 
-function renderizarDias() {
-    diasSemana.innerHTML = '';
-    const dias = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'];
-    dias.forEach(dia => {
+// Renderizar dias da semana
+function renderDays() {
+    const daysGrid = document.getElementById('days-grid');
+    daysGrid.innerHTML = '';
+
+    const days = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+
+    days.forEach(day => {
         const card = document.createElement('div');
-        card.className = 'card-dia';
-        card.innerHTML = `<h3>${dia}</h3>`;
-
-        if (treinos[dia]) {
-            card.innerHTML += `<p><strong>Grupo:</strong> ${treinos[dia].grupo}</p>`;
-            treinos[dia].exercicios.forEach(exercicio => {
-                const exercicioDiv = document.createElement('div');
-                exercicioDiv.innerHTML = `
-                    <h4>${exercicio.nome}</h4>
-                    <p><strong>Séries:</strong> ${exercicio.series}</p>
-                    <iframe src="https://www.youtube.com/embed/${extrairVideoID(exercicio.link)}?autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                `;
-                card.appendChild(exercicioDiv);
-            });
-        }
-
-        diasSemana.appendChild(card);
+        card.className = 'day-card';
+        card.innerHTML = `<h3>${day}</h3>`;
+        card.onclick = () => openDay(day);
+        daysGrid.appendChild(card);
     });
 }
 
-function extrairVideoID(url) {
-    const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([\w-]{11})/;
-    const match = url.match(regex);
-    return match ? match[1] : null;
+// Abrir exercícios de um dia
+function openDay(day) {
+    currentDay = day;
+    document.getElementById('week-section').classList.add('hidden');
+    document.getElementById('day-exercises-section').classList.remove('hidden');
+    document.getElementById('day-title').innerText = `Treino de ${day}`;
+    renderExercises();
 }
 
-btnAdicionar.addEventListener('click', () => {
-    modal.classList.remove('hidden');
-});
+// Voltar para dias
+function goBack() {
+    document.getElementById('day-exercises-section').classList.add('hidden');
+    document.getElementById('week-section').classList.remove('hidden');
+}
 
-btnCancelar.addEventListener('click', () => {
-    modal.classList.add('hidden');
-    form.reset();
-});
+// Renderizar exercícios
+function renderExercises() {
+    const exercisesList = document.getElementById('exercises-list');
+    exercisesList.innerHTML = '';
 
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const dia = document.getElementById('dia').value.trim();
-    const grupo = document.getElementById('grupo').value.trim();
-    const nome = document.getElementById('nome').value.trim();
-    const series = document.getElementById('series').value.trim();
-    const link = document.getElementById('link').value.trim();
+    const exercises = getExercisesForDay(currentDay);
 
-    if (!treinos[dia]) {
-        treinos[dia] = { grupo: grupo, exercicios: [] };
+    exercises.forEach((ex, index) => {
+        const card = document.createElement('div');
+        card.className = 'exercise-card';
+        card.innerHTML = `
+            <p><strong>Grupo:</strong> ${ex.group}</p>
+            <p><strong>Exercício:</strong> ${ex.name}</p>
+            <p><strong>Séries:</strong> ${ex.series}</p>
+            <div class="exercise-buttons">
+                <button onclick="editExercise(${index})">Editar</button>
+                <button class="clear-button" onclick="deleteExercise(${index})">Excluir</button>
+            </div>
+            <div style="margin-top:10px;">
+                <iframe width="100%" height="200" src="${formatYouTubeLink(ex.video)}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+        `;
+        exercisesList.appendChild(card);
+    });
+}
+
+// Formatar link do YouTube
+function formatYouTubeLink(link) {
+    const videoId = link.split('v=')[1]?.split('&')[0] || link.split('/').pop();
+    return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1`;
+}
+
+// Mostrar formulário de adicionar
+function showAddExerciseForm(editIndex = null) {
+    document.getElementById('exercise-form').classList.remove('hidden');
+    editingExerciseIndex = editIndex;
+    if (editIndex !== null) {
+        const exercises = getExercisesForDay(currentDay);
+        const ex = exercises[editIndex];
+        document.getElementById('day-select').value = currentDay;
+        document.getElementById('group-select').value = ex.group;
+        document.getElementById('exercise-name').value = ex.name;
+        document.getElementById('exercise-series').value = ex.series;
+        document.getElementById('exercise-video').value = ex.video;
+        document.getElementById('form-title').innerText = "Editar Exercício";
     } else {
-        treinos[dia].grupo = grupo;
+        document.getElementById('day-select').value = currentDay;
+        document.getElementById('group-select').value = '';
+        document.getElementById('exercise-name').value = '';
+        document.getElementById('exercise-series').value = '';
+        document.getElementById('exercise-video').value = '';
+        document.getElementById('form-title').innerText = "Novo Exercício";
+    }
+}
+
+// Salvar novo exercício ou edição
+function saveExercise() {
+    const day = document.getElementById('day-select').value;
+    const group = document.getElementById('group-select').value;
+    const name = document.getElementById('exercise-name').value.trim();
+    const series = document.getElementById('exercise-series').value.trim();
+    const video = document.getElementById('exercise-video').value.trim();
+
+    if (!day || !group || !name || !series || !video) {
+        alert('Por favor, preencha todos os campos.');
+        return;
     }
 
-    treinos[dia].exercicios.push({ nome, series, link });
-    salvarTreinos();
-    modal.classList.add('hidden');
-    form.reset();
-    renderizarDias();
-});
+    const allExercises = JSON.parse(localStorage.getItem('exercises') || '{}');
 
-btnLimpar.addEventListener('click', () => {
-    if (confirm('Tem certeza que deseja apagar todos os exercícios?')) {
-        treinos = {};
-        salvarTreinos();
-        renderizarDias();
+    if (!allExercises[day]) {
+        allExercises[day] = [];
     }
-});
 
-renderizarDias();
+    const newExercise = { group, name, series, video };
+
+    if (editingExerciseIndex !== null) {
+        allExercises[day][editingExerciseIndex] = newExercise;
+    } else {
+        allExercises[day].push(newExercise);
+    }
+
+    localStorage.setItem('exercises', JSON.stringify(allExercises));
+
+    document.getElementById('exercise-form').classList.add('hidden');
+    editingExerciseIndex = null;
+    openDay(day);
+}
+
+// Obter exercícios
+function getExercisesForDay(day) {
+    const allExercises = JSON.parse(localStorage.getItem('exercises') || '{}');
+    return allExercises[day] || [];
+}
+
+// Deletar exercício
+function deleteExercise(index) {
+    if (!confirm('Deseja realmente excluir este exercício?')) return;
+
+    const allExercises = JSON.parse(localStorage.getItem('exercises') || '{}');
+    if (allExercises[currentDay]) {
+        allExercises[currentDay].splice(index, 1);
+        localStorage.setItem('exercises', JSON.stringify(allExercises));
+        renderExercises();
+    }
+}
+
+// Limpar todos os exercícios
+function clearExercises() {
+    if (!confirm('Deseja realmente limpar todos os exercícios?')) return;
+
+    const allExercises = JSON.parse(localStorage.getItem('exercises') || '{}');
+    allExercises[currentDay] = [];
+    localStorage.setItem('exercises', JSON.stringify(allExercises));
+    renderExercises();
+}
+
+// Editar exercício
+function editExercise(index) {
+    showAddExerciseForm(index);
+}
