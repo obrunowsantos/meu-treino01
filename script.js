@@ -22,6 +22,10 @@ function addExercise() {
 
   if (name && series && videoLink && group && day) {
     const videoId = extractYouTubeId(videoLink);
+    if (!videoId) {
+      alert('Link do YouTube inválido!');
+      return;
+    }
     const iframe = `<iframe width="315" height="177" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
     const exercise = { name, series, video: iframe, group, day };
     let exercises = JSON.parse(localStorage.getItem(currentUser)) || [];
@@ -35,9 +39,20 @@ function addExercise() {
 }
 
 function extractYouTubeId(url) {
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/;
-  const match = url.match(regExp);
-  return (match && match[2].length == 11) ? match[2] : null;
+  let videoId = null;
+  if (url.includes('shorts/')) {
+    // Caso o link seja de shorts
+    const parts = url.split('shorts/');
+    videoId = parts[1]?.split('?')[0];
+  } else {
+    // Link normal
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    if (match && match[2].length == 11) {
+      videoId = match[2];
+    }
+  }
+  return videoId;
 }
 
 function displayExercises() {
