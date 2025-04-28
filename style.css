@@ -77,20 +77,19 @@ button.voltar:hover {
     background-color: #0069d9;
 }
 
-.login-container, .cadastro-container {
-    max-width: 400px;
-    margin: 50px auto;
+form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
     background: #fff;
-    padding: 30px;
+    padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-input {
-    width: 100%;
+input, select {
     padding: 10px;
-    margin-top: 10px;
-    margin-bottom: 20px;
+    margin: 10px 0;
     border-radius: 8px;
     border: 1px solid #ccc;
 }
