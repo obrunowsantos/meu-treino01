@@ -1,14 +1,32 @@
-<h1>Meu Treino</h1>
-<p>Monte seu treino de academia!</p>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Treino - Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-<form id="exercise-form">
-  <input type="text" id="exercise-name" placeholder="Nome do Exercício" required>
-  <input type="text" id="exercise-series" placeholder="Séries" required>
-  <input type="text" id="exercise-video" placeholder="Código de Incorporação (iframe)" required>
-  <input type="text" id="exercise-group" placeholder="Grupo Muscular" required>
-  
-  <button type="button" id="add-exercise">Adicionar Exercício</button>
-  <button type="button" id="clear-exercises">Limpar Todos os Exercícios</button>
-</form>
+<div id="login-screen">
+  <h1>Bem-vindo ao Meu Treino</h1>
+  <input type="text" id="username" placeholder="Digite seu nome de usuário">
+  <button id="login-button">Entrar</button>
+</div>
 
-<div id="exercises"></div>
+<div id="app" style="display:none;">
+  <h1 id="user-title"></h1>
+  <form id="exercise-form">
+    <input type="text" id="exercise-name" placeholder="Nome do Exercício" required>
+    <input type="text" id="exercise-series" placeholder="Séries" required>
+    <input type="text" id="exercise-video" placeholder="Código de Incorporação (iframe)" required>
+    <input type="text" id="exercise-group" placeholder="Grupo Muscular" required>
+    <button type="button" id="add-exercise">Adicionar Exercício</button>
+    <button type="button" id="clear-exercises">Limpar Todos os Exercícios</button>
+  </form>
+  <div id="exercises"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
