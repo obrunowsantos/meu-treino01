@@ -21,11 +21,23 @@
     <input type="text" id="exercise-series" placeholder="Séries" required>
     <input type="text" id="exercise-video" placeholder="Código de Incorporação (iframe)" required>
     <input type="text" id="exercise-group" placeholder="Grupo Muscular" required>
+    <select id="exercise-day" required>
+      <option value="">Selecione o dia da semana</option>
+      <option>Segunda-feira</option>
+      <option>Terça-feira</option>
+      <option>Quarta-feira</option>
+      <option>Quinta-feira</option>
+      <option>Sexta-feira</option>
+      <option>Sábado</option>
+      <option>Domingo</option>
+    </select>
     <button type="button" id="add-exercise">Adicionar Exercício</button>
     <button type="button" id="clear-exercises">Limpar Todos os Exercícios</button>
   </form>
   <div id="exercises"></div>
 </div>
+
+<audio id="beep-sound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"></audio>
 
 <script src="script.js"></script>
 </body>

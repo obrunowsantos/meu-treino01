@@ -10,7 +10,7 @@ h1 {
 }
 
 #login-screen, #app {
-  max-width: 600px;
+  max-width: 700px;
   margin: 30px auto;
   padding: 20px;
   background: white;
@@ -18,7 +18,7 @@ h1 {
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-input, button {
+input, select, button {
   width: 100%;
   padding: 10px;
   margin: 10px 0;
@@ -51,4 +51,11 @@ button:hover {
 
 .exercise button:hover {
   background: #c82333;
+}
+
+.timer {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #dc3545;
+  margin-top: 5px;
 }
