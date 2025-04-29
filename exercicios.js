@@ -33,10 +33,29 @@ function mostrarFormulario() {
     document.getElementById('formulario-exercicio').style.display = 'flex';
 }
 
+function extrairEmbedYoutube(url) {
+    try {
+        if (url.includes("youtube.com/watch?v=")) {
+            return url.replace("watch?v=", "embed/");
+        } else if (url.includes("youtube.com/shorts/")) {
+            const id = url.split("/shorts/")[1].split("?")[0];
+            return `https://www.youtube.com/embed/${id}`;
+        } else if (url.includes("youtu.be/")) {
+            const id = url.split("youtu.be/")[1].split("?")[0];
+            return `https://www.youtube.com/embed/${id}`;
+        } else {
+            return url;
+        }
+    } catch {
+        return url;
+    }
+}
+
 function salvarExercicio(dia) {
     const nome = document.getElementById('nome').value;
     const grupo = document.getElementById('grupo').value;
-    const video = document.getElementById('video').value.replace("watch?v=", "embed/");
+    const videoInput = document.getElementById('video').value;
+    const video = extrairEmbedYoutube(videoInput);
     const series = document.getElementById('series').value;
 
     if (nome && grupo && video && series) {
